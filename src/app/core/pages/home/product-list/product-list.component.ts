@@ -16,34 +16,29 @@ export class ProductListComponent {
 
   @ViewChild('deleteModal') deleteModal: ElementRef | undefined ;
 
-  itemsPerPage = 5;
-  selectedProduct: Datum | undefined;
+  public selectedProduct: Datum | undefined;
 
   public productService = inject(ProductService);
 
-  public products = this.productService.products();
-  public max = this.productService.max();
-  public pagProducts = this.productService.paginatedProducts;
 
   async ngOnInit() {
     await this.productService.loadProducts();
     this.updatePaginatedProducts();
   }
 
-  updatePaginatedProducts() {
+  public updatePaginatedProducts() {
     this.productService.paginateProducts(1);
   }
 
-  onItemsPerPageChange(event: Event) {
+  public onItemsPerPageChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     const itemsPerPage = parseInt(target.value, 10);
     this.productService.setItemsPerPage(itemsPerPage);
     this.updatePaginatedProducts();
   }
 
-  onSelectForDelete(selectedProduct: Datum):void {
+  public onSelectForDelete(selectedProduct: Datum):void {
     this.selectedProduct = selectedProduct;
-    console.log(this.selectedProduct);
   }
 
   public async deleteProduct(): Promise<void> {

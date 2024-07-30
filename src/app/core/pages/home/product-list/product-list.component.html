@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            @for (product of pagProducts(); track product.id) {
+            @for (product of productService.paginatedProducts(); track product.id) {
             <tr>
                 <td>
                     <img [srcset]="product.logo" alt="product.name" class="rounded-5 w-14">

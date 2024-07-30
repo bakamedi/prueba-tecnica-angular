@@ -60,28 +60,28 @@ export class AddProductComponent {
   }
 
 
-  onSubmit() {
+  public async onSubmit() {
     if (this.productForm.get('id')?.valid) {
-      this.productService.verifyIdentifier(this.productForm.get('id')?.value).subscribe(res => {
-        if (!res) {
-          this.showErrorModal.update(value => res);
-          const product = {
-           id: this.productForm.get('id')?.value,
-           name: this.productForm.get('name')?.value,
-           description: this.productForm.get('description')?.value,
-           logo: this.productForm.get('logo')?.value,
-           date_release: this.productForm.get('dateRelease')?.value,
-           date_revision: this.productForm.get('dateRevision')?.value,
-          };
+      const result = await this.productService.verifyIdentifier(this.productForm.get('id')?.value);
+      if (!result) {
+        this.showErrorModal.update(value => !result);
 
-          this.productService.createItem(product).subscribe(res => {
-            if (res) {
-              this.productService.loadProducts();
-              this.resetForm();
-            }
-          });
+        const product = {
+          id: this.productForm.get('id')?.value,
+          name: this.productForm.get('name')?.value,
+          description: this.productForm.get('description')?.value,
+          logo: this.productForm.get('logo')?.value,
+          date_release: this.productForm.get('dateRelease')?.value,
+          date_revision: this.productForm.get('dateRevision')?.value
+        };
+
+        const result2 = await this.productService.createItem(product);
+        if (result2) {
+         await this.productService.loadProducts();
+          this.productService.paginateProducts(1);
+          this.resetForm();
         }
-      });
+      }
     }
     if (this.productForm.valid) {
       console.log(this.productForm.value);

@@ -22,7 +22,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="id">ID</label>
                                 <input type="text" formControlName="id" class="form-control" name="id">
-                             
+
                                 @if (productForm.get('id')?.errors?.['required']) {
                                 <div class="invalid-feedback">
                                     ID es requerido.
@@ -36,7 +36,7 @@
                                     El ID no debe tener más de 10 caracteres.
                                 </div>
                                 }
-                                
+
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -62,8 +62,8 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="descripcion">Descripción</label>
-                                <input type="text" formControlName="description" class="form-control" name="descripcion"
-                                    >
+                                <input type="text" formControlName="description" class="form-control"
+                                    name="descripcion">
                                 @if (productForm.get('description')?.invalid && (productForm.get('description')?.touched
                                 ||
                                 productForm.get('description')?.dirty)) {
@@ -85,21 +85,21 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="logo">Logo</label>
-                                <input type="text" formControlName="logo" class="form-control" name="logo" >
-                                <div *ngIf="productForm.get('logo')?.invalid && (productForm.get('logo')?.touched || productForm.get('logo')?.dirty)"
-                                    class="invalid-feedback">
+                                <input type="text" formControlName="logo" class="form-control" name="logo">
+                                @if (productForm.get('logo')?.invalid && (productForm.get('logo')?.touched ||
+                                productForm.get('logo')?.dirty)){
                                     @if (productForm.get('name')?.errors?.['required']) {
                                     <div class="invalid-feedback">
                                         Logo es requerido.
                                     </div>
                                     }
-                                </div>
+                                }
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label for="fechaLiberacion">Fecha de Liberación</label>
                                 <input type="date" formControlName="dateRelease" class="form-control"
-                                name="dateRelease">
+                                    name="dateRelease">
                                 @if (productForm.get('dateRelease')?.invalid && (productForm.get('dateRelease')?.touched
                                 || productForm.get('dateRelease')?.dirty)) {
                                 @if (productForm.get('name')?.errors?.['required']) {
@@ -117,7 +117,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="fechaRevision">Fecha de Revisión</label>
                                 <input type="date" formControlName="dateRevision" class="form-control"
-                                name="dateRevision" >
+                                    name="dateRevision">
                                 @if (productForm.get('dateRevision')?.invalid &&
                                 (productForm.get('dateRevision')?.touched || productForm.get('dateRevision')?.dirty)) {
                                 @if (productForm.get('name')?.errors?.['required']) {
@@ -143,4 +143,3 @@
         </div>
     </div>
 </div>
-

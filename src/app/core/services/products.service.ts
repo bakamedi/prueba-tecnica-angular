@@ -1,10 +1,10 @@
 // src/app/core/services/product.service.ts
 
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 
-import { ProductInterface, Datum, Convert } from '../models/product.interface';
+import { ProductInterface, Datum } from '../models/product.interface';
 import { ProductDTO } from '../models/product.dto';
 
 interface State {
@@ -42,7 +42,7 @@ export class ProductService {
   public async loadProducts(): Promise<void> {
     try {
       const res = await firstValueFrom(this.http.get<ProductInterface>(this.apiUrl));
-  
+
       this.#state.set({
         ...this.#state(),
         loading: false,
@@ -61,7 +61,7 @@ export class ProductService {
     }
   }
 
-  paginateProducts(page: number): void {
+  public paginateProducts(page: number): void {
     const startIndex = (page - 1) * this.#state().itemsPerPage;
     const endIndex = startIndex + this.#state().itemsPerPage;
     const produtcs = [...this.#state().products];
@@ -70,28 +70,28 @@ export class ProductService {
       max: produtcs.length,
       paginatedProducts: produtcs.slice(startIndex, endIndex),
     });
+
   }
 
-  setItemsPerPage(itemsPerPage: number): void {
+  public setItemsPerPage(itemsPerPage: number): void {
     this.#state.set({
       ...this.#state(),
       itemsPerPage: itemsPerPage,
     });
   }
 
-  public verifyIdentifier(id: number | string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiUrl}/verification/${id}`);
+  public async verifyIdentifier(id: number | string): Promise<boolean> {
+    return await firstValueFrom(this.http.get<boolean>(`${this.apiUrl}/verification/${id}`));
   }
 
   public getOne(id: number | string): Observable<Datum> {
     return this.http.get<Datum>(`${this.apiUrl}/${id}`);
   }
 
-  public createItem(productItem: any): Observable<Datum> {
-    console.log(productItem);
-    return this.http.post<Datum>(this.apiUrl, productItem, {
+  public async createItem(productItem: any): Promise<Datum> {
+    return await firstValueFrom(this.http.post<Datum>(this.apiUrl, productItem, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    });
+    }));
   }
 
   public updateItem(id: number | string, productItem: ProductDTO): Observable<Datum> {
@@ -101,7 +101,7 @@ export class ProductService {
   }
 
   public async removeItem(id: number | string): Promise<void> {
-   await firstValueFrom( this.http.delete<void>(`${this.apiUrl}/${id}`));
+    await firstValueFrom(this.http.delete<void>(`${this.apiUrl}/${id}`));
   }
 
 }
