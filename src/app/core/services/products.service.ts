@@ -2,7 +2,7 @@
 
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 import { ProductInterface, Datum, Convert } from '../models/product.interface';
 import { ProductDTO } from '../models/product.dto';
@@ -11,6 +11,7 @@ interface State {
   products: Datum[];
   loading: boolean;
   max: number;
+  itemsPerPage: number;
   paginatedProducts: Datum[],
   productExist: boolean,
 }
@@ -27,6 +28,7 @@ export class ProductService {
       loading: true,
       products: [],
       max: 0,
+      itemsPerPage: 5,
       paginatedProducts: [],
       productExist: false,
     }
@@ -37,20 +39,43 @@ export class ProductService {
   public max = computed(() => this.#state().max);
   public paginatedProducts = computed(() => this.#state().paginatedProducts);
 
-
-  constructor() {
-    this.loadProducts();
-  }
-
-  public loadProducts() {
-    this.http.get<ProductInterface>(this.apiUrl).subscribe(res => {
+  public async loadProducts(): Promise<void> {
+    try {
+      const res = await firstValueFrom(this.http.get<ProductInterface>(this.apiUrl));
+  
       this.#state.set({
         ...this.#state(),
         loading: false,
         products: res.data,
         max: res.data.length,
-        paginatedProducts: [],
+        paginatedProducts: res.data.slice(0, 5),
       });
+
+    } catch (error) {
+      console.error('Error loading products:', error);
+      // Manejo de errores, si es necesario
+      this.#state.set({
+        ...this.#state(),
+        loading: false,
+      });
+    }
+  }
+
+  paginateProducts(page: number): void {
+    const startIndex = (page - 1) * this.#state().itemsPerPage;
+    const endIndex = startIndex + this.#state().itemsPerPage;
+    const produtcs = [...this.#state().products];
+    this.#state.set({
+      ...this.#state(),
+      max: produtcs.length,
+      paginatedProducts: produtcs.slice(startIndex, endIndex),
+    });
+  }
+
+  setItemsPerPage(itemsPerPage: number): void {
+    this.#state.set({
+      ...this.#state(),
+      itemsPerPage: itemsPerPage,
     });
   }
 
@@ -75,8 +100,8 @@ export class ProductService {
     });
   }
 
-  public removeItem(id: number | string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  public async removeItem(id: number | string): Promise<void> {
+   await firstValueFrom( this.http.delete<void>(`${this.apiUrl}/${id}`));
   }
 
 }

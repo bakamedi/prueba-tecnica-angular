@@ -17,32 +17,27 @@ export class ProductListComponent {
   @ViewChild('deleteModal') deleteModal: ElementRef | undefined ;
 
   itemsPerPage = 5;
-  paginatedProducts: Datum[] = [];
   selectedProduct: Datum | undefined;
 
   public productService = inject(ProductService);
 
   public products = this.productService.products();
   public max = this.productService.max();
+  public pagProducts = this.productService.paginatedProducts;
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.productService.loadProducts();
     this.updatePaginatedProducts();
   }
 
-  private getPaginatedProducts(page: number): Datum[] {
-    const startIndex = (page - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return this.products.slice(startIndex, endIndex);
-  }
-
   updatePaginatedProducts() {
-    this.paginatedProducts = this.getPaginatedProducts(1);
+    this.productService.paginateProducts(1);
   }
 
   onItemsPerPageChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     const itemsPerPage = parseInt(target.value, 10);
-    this.itemsPerPage = itemsPerPage;
+    this.productService.setItemsPerPage(itemsPerPage);
     this.updatePaginatedProducts();
   }
 
@@ -51,10 +46,10 @@ export class ProductListComponent {
     console.log(this.selectedProduct);
   }
 
-  deleteProduct(): void {
-    this.productService.removeItem(this.selectedProduct?.id!).subscribe(res => {
-      this.productService.loadProducts();
-    });
+  public async deleteProduct(): Promise<void> {
+   await this.productService.removeItem(this.selectedProduct?.id!);
+   await this.productService.loadProducts();
+   this.updatePaginatedProducts();
   }
 
 }

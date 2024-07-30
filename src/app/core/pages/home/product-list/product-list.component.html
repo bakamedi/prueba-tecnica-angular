@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            @for (product of paginatedProducts; track product.id) {
+            @for (product of pagProducts(); track product.id) {
             <tr>
                 <td>
                     <img [srcset]="product.logo" alt="product.name" class="rounded-5 w-14">
@@ -44,7 +44,7 @@
         </tbody>
     </table>
     <div class="d-flex justify-content-between">
-        <p>{{max}} Resultados</p>
+        <p>{{productService.max()}} Resultados</p>
         <div>
             <select class="custom-select" style="width: auto;" (change)="onItemsPerPageChange($event)">
                 <option value="5">5</option>
