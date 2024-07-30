@@ -1,0 +1,76 @@
+<div class="row">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>Nombre del producto</th>
+                <th>Descripción</th>
+                <th>Fecha de liberación</th>
+                <th>Fecha de reestructuración</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (product of paginatedProducts; track product.id) {
+            <tr>
+                <td>
+                    <img [srcset]="product.logo" alt="product.name" class="rounded-5 w-14">
+                </td>
+                <td>{{product.name}}</td>
+                <td>{{product.date_release}}</td>
+                <td>{{product.date_revision}}</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                <path
+                                    d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="#">Editar</a>
+                            </li>
+                            <li>
+                                <a (click)="onSelectForDelete(product)" class="dropdown-item" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal">Eliminar</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-between">
+        <p>{{max}} Resultados</p>
+        <div>
+            <select class="custom-select" style="width: auto;" (change)="onItemsPerPageChange($event)">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div #deleteModal class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Estas seguro de Eliminar el producto {{selectedProduct?.name}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="deleteProduct()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -62,6 +62,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget":"prueba-tecnica-angular:build",
+            "proxyConfig": "src/proxy.conf.json"
+            },
           "configurations": {
             "production": {
               "buildTarget": "prueba-tecnica-angular:build:production"

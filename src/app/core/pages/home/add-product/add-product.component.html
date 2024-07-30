@@ -1,0 +1,146 @@
+<div class="col-auto">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+        Agregar
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <h3 class="text-center">Formulario de Registro</h3>
+
+                    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" id="registrationForm">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id">ID</label>
+                                <input type="text" formControlName="id" class="form-control" name="id">
+                             
+                                @if (productForm.get('id')?.errors?.['required']) {
+                                <div class="invalid-feedback">
+                                    ID es requerido.
+                                </div>
+                                } @if (productForm.get('id')?.errors?.['minlength']) {
+                                <div class="invalid-feedback">
+                                    El ID debe tener al menos 3 caracteres.
+                                </div>
+                                } @if (productForm.get('id')?.errors?.['maxlength']) {
+                                <div class="invalid-feedback">
+                                    El ID no debe tener más de 10 caracteres.
+                                </div>
+                                }
+                                
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" formControlName="name" class="form-control" name="nombre">
+                                @if (productForm.get('name')?.invalid && (productForm.get('name')?.touched ||
+                                productForm.get('name')?.dirty)) {
+                                @if (productForm.get('name')?.errors?.['required']) {
+                                <div class="invalid-feedback">
+                                    Nombre es requerido.
+                                </div>
+                                } @else if (productForm.get('name')?.errors?.['minlength']) {
+                                <div class="invalid-feedback">
+                                    El nombre debe tener al menos 5 caracteres.
+                                </div>
+                                } @else if (productForm.get('name')?.errors?.['maxlength']) {
+                                <div class="invalid-feedback">
+                                    El nombre no debe tener más de 100 caracteres.
+                                </div>
+                                }
+                                }
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="descripcion">Descripción</label>
+                                <input type="text" formControlName="description" class="form-control" name="descripcion"
+                                    >
+                                @if (productForm.get('description')?.invalid && (productForm.get('description')?.touched
+                                ||
+                                productForm.get('description')?.dirty)) {
+                                @if (productForm.get('name')?.errors?.['required']) {
+                                <div class="invalid-feedback">
+                                    Descripción es requerida.
+                                </div>
+                                } @else if (productForm.get('name')?.errors?.['minlength']) {
+                                <div class="invalid-feedback">
+                                    El nombre debe tener al menos 10 caracteres.
+                                </div>
+                                } @else if (productForm.get('name')?.errors?.['maxlength']) {
+                                <div class="invalid-feedback">
+                                    El nombre no debe tener más de 200 caracteres.
+                                </div>
+                                }
+                                }
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="logo">Logo</label>
+                                <input type="text" formControlName="logo" class="form-control" name="logo" >
+                                <div *ngIf="productForm.get('logo')?.invalid && (productForm.get('logo')?.touched || productForm.get('logo')?.dirty)"
+                                    class="invalid-feedback">
+                                    @if (productForm.get('name')?.errors?.['required']) {
+                                    <div class="invalid-feedback">
+                                        Logo es requerido.
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="fechaLiberacion">Fecha de Liberación</label>
+                                <input type="date" formControlName="dateRelease" class="form-control"
+                                name="dateRelease">
+                                @if (productForm.get('dateRelease')?.invalid && (productForm.get('dateRelease')?.touched
+                                || productForm.get('dateRelease')?.dirty)) {
+                                @if (productForm.get('name')?.errors?.['required']) {
+                                <div class="invalid-feedback">
+                                    Fecha de liberación es requerida.
+                                </div>
+                                } @else if (productForm.get('dateRelease')?.errors?.['dateInvalid']) {
+                                <div class="invalid-feedback">
+                                    La fecha debe ser igual o posterior a la fecha actual.
+                                </div>
+                                }
+                                }
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="fechaRevision">Fecha de Revisión</label>
+                                <input type="date" formControlName="dateRevision" class="form-control"
+                                name="dateRevision" >
+                                @if (productForm.get('dateRevision')?.invalid &&
+                                (productForm.get('dateRevision')?.touched || productForm.get('dateRevision')?.dirty)) {
+                                @if (productForm.get('name')?.errors?.['required']) {
+                                <div class="invalid-feedback">
+                                    Fecha de revisión es requerida.
+                                </div>
+                                } @else if (productForm.get('dateRevision')?.errors?.['dateInvalid']) {
+                                <div class="invalid-feedback">
+                                    La fecha de revisión debe ser igual o posterior a la fecha actual.
+                                </div>
+                                }
+                                }
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" (click)="resetForm()">Reiniciar</button>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
